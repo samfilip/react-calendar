@@ -1,0 +1,8 @@
+div.week {
+  display: flex;
+  flex-direction: row;
+  width: 1400px;
+  height: 150px;
+  margin: 0; 
+  padding: 0;
+}

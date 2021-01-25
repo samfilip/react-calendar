@@ -1,70 +1,124 @@
-# Getting Started with Create React App
+# Part 1: Online-Calendar
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Goal
+In the previous challenge, you built a calendar web application with JavaScript, HTML, and CSS. The content of the schedule was found in the global variable "schedule". In production, data is frequently stored in a remote database.
+In this challenge you have 3 main tasks:
 
-## Available Scripts
+- [x] You will need to make an ajax request to a database on a remote URL.
+- [x] You will need to extract your current week's schedule from there.
+- [ ] You will need to display this data in your calendar application.
 
-In the project directory, you can run:
+## How do I get started
+As usual, there will be some setup involved before you can get started.
 
-### `yarn start`
+- [x] You should already have this repo forked and cloned from the previous unit, so use `cd` to navigate to this project's directory on your machine
+- [x] ***important:*** Make sure all your previous work is committed before moving on with the steps: use `git status` and then `add` and `commit` any uncommitted work until `git status` returns "nothing to commit, working directory clean"
+- [x] To update your cloned repo with files from the Codesmith GitHub Organization, we first need to link our local repository to the Codesmith GitHub Organization. To add a remote - which we will name `upstream` - to our local repository, run the following command in your terminal.<br>
+```
+git remote add upstream https://github.com/CodesmithLLC/unit-project-slack.git
+```
+- [x] Once your project directory is clean (i.e. everything is committed), use Git's [fetch](https://git-scm.com/docs/git-fetch) command to copy down the `unit-5` branch to your machine: `git fetch <remote-name> <remote-branch-name>:<local-branch-name>`
+```
+git fetch upstream unit-5:unit-5
+```
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+- [x] You now have a branch called `unit-5`. Switch to it with `git checkout unit-5`. Work from here. If you ever lose track of which branch you are on, check using `git branch`.
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+- [x] Next, use the following command to install any new npm dependencies:
+```
+npm install
+```
 
-### `yarn test`
+- If you'd like to continue working from where you left off on the last unit:
+	- [x] switch back to your previous branch (you remember the `git checkout` command, right?) and copy your code from the index.html and the main.js
+		- hint: to see a list of all branches (including your current branch), type `git branch`
+	- [x] Switch back to the `unit-5` branch
+	- [x] Paste your previous code back into index.html and main.js
+- [x] Start your server by running:
+```
+npm start
+```
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- [x] Visit http://localhost:3000 to view your index.html page
+	- *Note: for this unit and all further units you should be using your Web server to view your site rather than loading index.html in your browser directly.*
 
-### `yarn build`
+## Challenges
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+You may use vanilla JavaScript or jQuery to complete these challenges. Try to implement each step both ways and see which one you like better. [Here](http://youmightnotneedjquery.com) for some tips on how to perform common tasks each way.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+- [ x Modify your main.js code to perform an asynchronous HTTP GET request to the following URL: <br> ```http://slack-server-production.us-west-2.elasticbeanstalk.com/calendar/{LA or NY}/{COHORT_NUMBER}```
+	- ***The format of the data received from the URL will be different from the schedule object given in the previous challenge, so don't expect your old code to work without modification***
+- [ ] Once you've retrieved the calendar data, populate the DOM with the data so that the user can see their calendar entries
+- [ ] **BONUS (Only attempt if you have extra time)**: Use jQuery's promise feature to control your asynchronous GET request
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## How do I test if my answer is correct?
+Run the following code in your terminal to test your code:
+```
+npm test
+```
 
-### `yarn eject`
+Treat the tests for this unit as a guideline and not as an absolute. You may choose to implement your calendar in a slightly different way than the tests are expecting which could cause the tests to fail, and that's fine - as long as you can get your calendar data into the DOM you're on the right track.
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+---
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+# Part 2: Online-Chatroom
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+## Summary
+In part 1, we used an asynchronous request to retrieve calendar data and then used that data to populate the DOM so that the user could view their calendar entries. In part 2 we're going to use even more asynchronous requests so that you can develop a deeper understanding and familiarity with asynchronous code. If you remember one thing from this unit, remember that [AJAX](https://en.wikipedia.org/wiki/Ajax_(programming)) (asynchronous JavaScript and XML) allows the browser to communicate with a foreign server without reloading the page.
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+![inline](./docs/assets/images/page_lifecycles.png)
 
-## Learn More
+Imagine if on Slack the entire page had to refresh every time a new message was posted - that's crazy. Prior to AJAX the browser would need to refresh the page in order to change. With AJAX, we can send a request to the server and - when the server responds - we can modify the page dynamically with JavaScript.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+### Request
+Every asynchronous request is at its core an HTTP request. The browser sends a `request` object to the server with information regarding the broswer's intention with the server. There are major request types (or methods) that provide valuable information about the browsers intention:
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+- GET
+- POST
+- PUT
+- DELETE
 
-### Code Splitting
+**GET** requests are primarily used for fetching data from a the server. For example, when you load Faceboook, your browser is making a GET request for all of your friends' latest post to populate the news feed. **POST** requests are used to provide data to the server. Whenever you are using Facebook messengers, and you send a message - a POST request is being made by your browser to add your message the server. **PUT** requests are used to update data on the server. **DELETE** requests inform the server that some data needs to be deleted.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+### HTTP Headers
+![](./docs/assets/images/http_headers.png)
 
-### Analyzing the Bundle Size
+In addition to the request **method**, the browser may provide additional information and instructions about its request in the form of **[request headers](https://en.wikipedia.org/wiki/List_of_HTTP_header_fields)**.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+A few examples of what is provided in the HTTP headers:
 
-### Making a Progressive Web App
+- **Accept:** Informs the server what file type the browser expects to receive back from the server
+- **User-Agent:** Information about the method at which the browser is communicating with the server
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
 
-### Advanced Configuration
+## Challenges
+- [x] Create an area in your HTML where chat messages can be displayed. You may create this area either statically (editing your index.html file directly), dynamically (by interacting with the DOM using JavaScript in main.js), or with a combination of the two.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+- [x] Retrieve the list of messages from our messaging server by making a **GET** request to the following URI: <br>```https://curriculum-api.codesmith.io/messages```
 
-### Deployment
+- [x] Using JavaScript, populate your messages area with the list of messages retrieved via the AJAX request.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
 
-### `yarn build` fails to minify
+- [x] Create a text input and submit button where users of your chatroom can enter and submit their messages.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+
+- [x] Post messages to the server by making a **POST** request to the same URI as above. Include a **body** with your AJAX request that includes information about your message. The body should contain the properties `created_by` and `message`. The server is expecting the body of the POST request to be encoded as **JSON**.  
+	- *Hint: you may need to tell the server what type of data you're sending over*
+
+Below is a sample message:
+
+```javascript
+{
+  created_by: "Alex Zai",
+  message: "Sample message"
+}
+```
+
+### How do I test if my answer is correct?
+
+Run the following command in the terminal:
+```
+npm test
+```
+
+Again: Treat the tests for this unit as a guideline and not as an absolute. You may choose to implement your chatroom in a slightly different way than the tests are expecting which could cause the tests to fail, and that's fine - as long as you can get your messages data into the DOM and POST messages to the server then you're on the right track.
